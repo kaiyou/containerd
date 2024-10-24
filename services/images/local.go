@@ -35,7 +35,7 @@ import (
 	ptypes "github.com/containerd/containerd/protobuf/types"
 	"github.com/containerd/containerd/services"
 	"github.com/containerd/containerd/services/warning"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/log"
 )
 
@@ -88,7 +88,7 @@ var _ imagesapi.ImagesClient = &local{}
 func (l *local) Get(ctx context.Context, req *imagesapi.GetImageRequest, _ ...grpc.CallOption) (*imagesapi.GetImageResponse, error) {
 	image, err := l.store.Get(ctx, req.Name)
 	if err != nil {
-		return nil, errdefs.ToGRPC(err)
+		return nil, errgrpc.ToGRPC(err)
 	}
 
 	imagepb := imageToProto(&image)
@@ -100,7 +100,7 @@ func (l *local) Get(ctx context.Context, req *imagesapi.GetImageRequest, _ ...gr
 func (l *local) List(ctx context.Context, req *imagesapi.ListImagesRequest, _ ...grpc.CallOption) (*imagesapi.ListImagesResponse, error) {
 	images, err := l.store.List(ctx, req.Filters...)
 	if err != nil {
-		return nil, errdefs.ToGRPC(err)
+		return nil, errgrpc.ToGRPC(err)
 	}
 
 	return &imagesapi.ListImagesResponse{
@@ -124,7 +124,7 @@ func (l *local) Create(ctx context.Context, req *imagesapi.CreateImageRequest, _
 	}
 	created, err := l.store.Create(ctx, image)
 	if err != nil {
-		return nil, errdefs.ToGRPC(err)
+		return nil, errgrpc.ToGRPC(err)
 	}
 
 	resp.Image = imageToProto(&created)
@@ -163,7 +163,7 @@ func (l *local) Update(ctx context.Context, req *imagesapi.UpdateImageRequest, _
 
 	updated, err := l.store.Update(ctx, image, fieldpaths...)
 	if err != nil {
-		return nil, errdefs.ToGRPC(err)
+		return nil, errgrpc.ToGRPC(err)
 	}
 
 	resp.Image = imageToProto(&updated)
@@ -183,7 +183,7 @@ func (l *local) Delete(ctx context.Context, req *imagesapi.DeleteImageRequest, _
 	log.G(ctx).WithField("name", req.Name).Debugf("delete image")
 
 	if err := l.store.Delete(ctx, req.Name); err != nil {
-		return nil, errdefs.ToGRPC(err)
+		return nil, errgrpc.ToGRPC(err)
 	}
 
 	if err := l.publisher.Publish(ctx, "/images/delete", &eventstypes.ImageDelete{

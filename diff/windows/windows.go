@@ -37,7 +37,7 @@ import (
 	"github.com/containerd/containerd/mount"
 	"github.com/containerd/containerd/pkg/epoch"
 	"github.com/containerd/containerd/plugin"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/log"
 	"github.com/containerd/platforms"
 	"github.com/opencontainers/go-digest"

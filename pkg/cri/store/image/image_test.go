@@ -21,7 +21,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"k8s.io/apimachinery/pkg/util/sets"
 
 	"github.com/opencontainers/go-digest/digestset"

@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	client "github.com/containerd/containerd/runtime/v2/shim"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 )
 
 func TestParseStartResponse(t *testing.T) {

@@ -23,6 +23,7 @@ import (
 	"github.com/containerd/containerd"
 	apitasks "github.com/containerd/containerd/api/services/tasks/v1"
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/log"
 )
 
@@ -115,7 +116,7 @@ func (c *Controller) cleanupSandboxTask(ctx context.Context, sbCntr containerd.C
 	if errdefs.IsNotFound(err) {
 		_, err = c.client.TaskService().Delete(ctx, &apitasks.DeleteTaskRequest{ContainerID: sbCntr.ID()})
 		if err != nil {
-			err = errdefs.FromGRPC(err)
+			err = errgrpc.ToNative(err)
 			if !errdefs.IsNotFound(err) {
 				return fmt.Errorf("failed to cleanup sandbox %s in task-service: %w", sbCntr.ID(), err)
 			}

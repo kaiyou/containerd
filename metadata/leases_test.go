@@ -23,7 +23,7 @@ import (
 	"testing"
 
 	"github.com/containerd/containerd/leases"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	bolt "go.etcd.io/bbolt"
 )
 

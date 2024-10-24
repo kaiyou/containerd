@@ -30,7 +30,7 @@ import (
 	"github.com/containerd/containerd/namespaces"
 	"github.com/containerd/containerd/protobuf"
 	"github.com/containerd/containerd/protobuf/types"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/log/logtest"
 	"github.com/containerd/typeurl/v2"
 	"github.com/google/go-cmp/cmp"

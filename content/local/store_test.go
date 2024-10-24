@@ -36,7 +36,7 @@ import (
 	"github.com/containerd/containerd/content/testsuite"
 	"github.com/containerd/containerd/pkg/randutil"
 	"github.com/containerd/containerd/pkg/testutil"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"

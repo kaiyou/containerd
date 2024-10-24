@@ -29,7 +29,7 @@ import (
 	"github.com/containerd/containerd/integration/images"
 	"github.com/containerd/containerd/namespaces"
 	"github.com/containerd/containerd/pkg/cri/labels"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	runtime "k8s.io/cri-api/pkg/apis/runtime/v1"

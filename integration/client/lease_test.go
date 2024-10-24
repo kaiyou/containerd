@@ -24,7 +24,7 @@ import (
 	"github.com/containerd/containerd/images"
 	imagelist "github.com/containerd/containerd/integration/images"
 	"github.com/containerd/containerd/leases"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/opencontainers/image-spec/identity"
 )
 

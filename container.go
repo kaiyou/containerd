@@ -34,6 +34,7 @@ import (
 	"github.com/containerd/containerd/protobuf"
 	"github.com/containerd/containerd/runtime/v2/runc/options"
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/fifo"
 	"github.com/containerd/typeurl/v2"
 	ver "github.com/opencontainers/image-spec/specs-go"
@@ -300,7 +301,7 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 	}
 	response, err := c.client.TaskService().Create(ctx, request)
 	if err != nil {
-		return nil, errdefs.FromGRPC(err)
+		return nil, errgrpc.ToNative(err)
 	}
 	t.pid = response.Pid
 	return t, nil
@@ -318,7 +319,7 @@ func (c *container) Update(ctx context.Context, opts ...UpdateContainerOpts) err
 		}
 	}
 	if _, err := c.client.ContainerService().Update(ctx, r); err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 	return nil
 }
@@ -364,7 +365,7 @@ func (c *container) Checkpoint(ctx context.Context, ref string, opts ...Checkpoi
 	// process remaining opts
 	for _, o := range opts {
 		if err := o(ctx, c.client, &info, index, copts); err != nil {
-			err = errdefs.FromGRPC(err)
+			err = errgrpc.ToNative(err)
 			if !errdefs.IsAlreadyExists(err) {
 				return nil, err
 			}
@@ -392,7 +393,7 @@ func (c *container) loadTask(ctx context.Context, ioAttach cio.Attach) (Task, er
 		ContainerID: c.id,
 	})
 	if err != nil {
-		err = errdefs.FromGRPC(err)
+		err = errgrpc.ToNative(err)
 		if errdefs.IsNotFound(err) {
 			return nil, fmt.Errorf("no running task found: %w", err)
 		}

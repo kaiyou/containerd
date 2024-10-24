@@ -25,11 +25,12 @@
 // The functions ToGRPC and FromGRPC can be used to map server-side and
 // client-side errors to the correct types.
 //
-// Deprecated: use [github.com/containerd/errdefs].
+// Deprecated: use [github.com/containerd/errdefs/pkg/errgrpc].
 package errdefs
 
 import (
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 )
 
 // Definitions of common error types used throughout containerd. All containerd
@@ -101,18 +102,18 @@ func IsDeadlineExceeded(err error) bool {
 // If the error is unmapped, the original error will be returned to be handled
 // by the regular grpc error handling stack.
 func ToGRPC(err error) error {
-	return errdefs.ToGRPC(err)
+	return errgrpc.ToGRPC(err)
 }
 
 // ToGRPCf maps the error to grpc error codes, assembling the formatting string
 // and combining it with the target error string.
 //
-// This is equivalent to errdefs.ToGRPC(fmt.Errorf("%s: %w", fmt.Sprintf(format, args...), err))
+// This is equivalent to errgrpc.ToGRPC(fmt.Errorf("%s: %w", fmt.Sprintf(format, args...), err))
 func ToGRPCf(err error, format string, args ...interface{}) error {
-	return errdefs.ToGRPCf(err, format, args...)
+	return errgrpc.ToGRPCf(err, format, args...)
 }
 
 // FromGRPC returns the underlying error from a grpc service based on the grpc error code
 func FromGRPC(err error) error {
-	return errdefs.FromGRPC(err)
+	return errgrpc.ToNative(err)
 }

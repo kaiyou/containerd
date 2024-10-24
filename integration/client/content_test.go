@@ -26,7 +26,7 @@ import (
 	"github.com/containerd/containerd/content"
 	"github.com/containerd/containerd/content/testsuite"
 	"github.com/containerd/containerd/namespaces"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 )
 
 func newContentStore(ctx context.Context, root string) (context.Context, content.Store, func() error, error) {

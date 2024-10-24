@@ -23,7 +23,7 @@ import (
 	"fmt"
 
 	sandboxstore "github.com/containerd/containerd/pkg/cri/store/sandbox"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	runtime "k8s.io/cri-api/pkg/apis/runtime/v1"
 )
 

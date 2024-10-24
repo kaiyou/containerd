@@ -30,7 +30,7 @@ import (
 	"github.com/containerd/containerd/images"
 	"github.com/containerd/containerd/images/archive"
 	"github.com/containerd/containerd/namespaces"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/platforms"
 	"github.com/google/uuid"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"

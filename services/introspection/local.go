@@ -31,6 +31,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 
 	api "github.com/containerd/containerd/api/services/introspection/v1"
 	"github.com/containerd/containerd/api/types"
@@ -99,7 +100,7 @@ func (l *Local) UpdateLocal(root string) {
 func (l *Local) Plugins(ctx context.Context, req *api.PluginsRequest, _ ...grpc.CallOption) (*api.PluginsResponse, error) {
 	filter, err := filters.ParseAll(req.Filters...)
 	if err != nil {
-		return nil, errdefs.ToGRPCf(errdefs.ErrInvalidArgument, err.Error())
+		return nil, errgrpc.ToGRPCf(errdefs.ErrInvalidArgument, err.Error())
 	}
 
 	var plugins []*api.Plugin
@@ -130,14 +131,14 @@ func (l *Local) getPlugins() []*api.Plugin {
 func (l *Local) Server(ctx context.Context, _ *ptypes.Empty, _ ...grpc.CallOption) (*api.ServerResponse, error) {
 	u, err := l.getUUID()
 	if err != nil {
-		return nil, errdefs.ToGRPC(err)
+		return nil, errgrpc.ToGRPC(err)
 	}
 	pid := os.Getpid()
 	var pidns uint64
 	if runtime.GOOS == "linux" {
 		pidns, err = statPIDNS(pid)
 		if err != nil {
-			return nil, errdefs.ToGRPC(err)
+			return nil, errgrpc.ToGRPC(err)
 		}
 	}
 	return &api.ServerResponse{
@@ -243,7 +244,7 @@ func pluginsToPB(plugins []*plugin.Plugin) []*api.Plugin {
 
 		var initErr *rpc.Status
 		if err := p.Err(); err != nil {
-			st, ok := status.FromError(errdefs.ToGRPC(err))
+			st, ok := status.FromError(errgrpc.ToGRPC(err))
 			if ok {
 				var details []*ptypes.Any
 				for _, d := range st.Proto().Details {

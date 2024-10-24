@@ -20,7 +20,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/stretchr/testify/assert"
 )
 

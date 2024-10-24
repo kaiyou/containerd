@@ -27,6 +27,7 @@ import (
 	ptypes "github.com/containerd/containerd/protobuf/types"
 	"github.com/containerd/containerd/services"
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 )
 
 func init() {
@@ -83,5 +84,5 @@ func (s *server) Server(ctx context.Context, empty *ptypes.Empty) (*api.ServerRe
 }
 
 func (s *server) PluginInfo(ctx context.Context, in *api.PluginInfoRequest) (*api.PluginInfoResponse, error) {
-	return nil, errdefs.ToGRPC(errdefs.ErrNotImplemented)
+	return nil, errgrpc.ToGRPC(errdefs.ErrNotImplemented)
 }

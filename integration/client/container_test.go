@@ -43,7 +43,7 @@ import (
 	_ "github.com/containerd/containerd/runtime"
 	"github.com/containerd/containerd/runtime/v2/runc/options"
 	"github.com/containerd/continuity/fs"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/go-runc"
 	"github.com/containerd/log/logtest"
 	"github.com/containerd/platforms"

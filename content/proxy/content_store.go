@@ -24,7 +24,7 @@ import (
 	"github.com/containerd/containerd/content"
 	"github.com/containerd/containerd/protobuf"
 	protobuftypes "github.com/containerd/containerd/protobuf/types"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	digest "github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 )
@@ -46,7 +46,7 @@ func (pcs *proxyContentStore) Info(ctx context.Context, dgst digest.Digest) (con
 		Digest: dgst.String(),
 	})
 	if err != nil {
-		return content.Info{}, errdefs.FromGRPC(err)
+		return content.Info{}, errgrpc.ToNative(err)
 	}
 
 	return infoFromGRPC(resp.Info), nil
@@ -57,14 +57,14 @@ func (pcs *proxyContentStore) Walk(ctx context.Context, fn content.WalkFunc, fil
 		Filters: filters,
 	})
 	if err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 
 	for {
 		msg, err := session.Recv()
 		if err != nil {
 			if err != io.EOF {
-				return errdefs.FromGRPC(err)
+				return errgrpc.ToNative(err)
 			}
 
 			break
@@ -84,7 +84,7 @@ func (pcs *proxyContentStore) Delete(ctx context.Context, dgst digest.Digest) er
 	if _, err := pcs.client.Delete(ctx, &contentapi.DeleteContentRequest{
 		Digest: dgst.String(),
 	}); err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 
 	return nil
@@ -110,7 +110,7 @@ func (pcs *proxyContentStore) Status(ctx context.Context, ref string) (content.S
 		Ref: ref,
 	})
 	if err != nil {
-		return content.Status{}, errdefs.FromGRPC(err)
+		return content.Status{}, errgrpc.ToNative(err)
 	}
 
 	status := resp.Status
@@ -132,7 +132,7 @@ func (pcs *proxyContentStore) Update(ctx context.Context, info content.Info, fie
 		},
 	})
 	if err != nil {
-		return content.Info{}, errdefs.FromGRPC(err)
+		return content.Info{}, errgrpc.ToNative(err)
 	}
 	return infoFromGRPC(resp.Info), nil
 }
@@ -142,7 +142,7 @@ func (pcs *proxyContentStore) ListStatuses(ctx context.Context, filters ...strin
 		Filters: filters,
 	})
 	if err != nil {
-		return nil, errdefs.FromGRPC(err)
+		return nil, errgrpc.ToNative(err)
 	}
 
 	var statuses []content.Status
@@ -170,7 +170,7 @@ func (pcs *proxyContentStore) Writer(ctx context.Context, opts ...content.Writer
 	}
 	wrclient, offset, err := pcs.negotiate(ctx, wOpts.Ref, wOpts.Desc.Size, wOpts.Desc.Digest)
 	if err != nil {
-		return nil, errdefs.FromGRPC(err)
+		return nil, errgrpc.ToNative(err)
 	}
 
 	return &remoteWriter{
@@ -185,7 +185,7 @@ func (pcs *proxyContentStore) Abort(ctx context.Context, ref string) error {
 	if _, err := pcs.client.Abort(ctx, &contentapi.AbortRequest{
 		Ref: ref,
 	}); err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 
 	return nil

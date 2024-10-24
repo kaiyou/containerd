@@ -28,6 +28,7 @@ import (
 	"github.com/containerd/containerd/runtime"
 	shim "github.com/containerd/containerd/runtime/v1/shim/v1"
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/ttrpc"
 )
 
@@ -51,7 +52,7 @@ func (p *Process) Kill(ctx context.Context, signal uint32, _ bool) error {
 		ID:     p.id,
 	})
 	if err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 	return err
 }
@@ -81,7 +82,7 @@ func (p *Process) State(ctx context.Context) (runtime.State, error) {
 	})
 	if err != nil {
 		if !errors.Is(err, ttrpc.ErrClosed) {
-			return runtime.State{}, errdefs.FromGRPC(err)
+			return runtime.State{}, errgrpc.ToNative(err)
 		}
 
 		// We treat ttrpc.ErrClosed as the shim being closed, but really this
@@ -108,7 +109,7 @@ func (p *Process) ResizePty(ctx context.Context, size runtime.ConsoleSize) error
 		Height: size.Height,
 	})
 	if err != nil {
-		err = errdefs.FromGRPC(err)
+		err = errgrpc.ToNative(err)
 	}
 	return err
 }
@@ -120,7 +121,7 @@ func (p *Process) CloseIO(ctx context.Context) error {
 		Stdin: true,
 	})
 	if err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 	return nil
 }
@@ -131,7 +132,7 @@ func (p *Process) Start(ctx context.Context) error {
 		ID: p.id,
 	})
 	if err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 	p.t.events.Publish(ctx, runtime.TaskExecStartedEventTopic, &eventstypes.TaskExecStarted{
 		ContainerID: p.t.id,
@@ -161,7 +162,7 @@ func (p *Process) Delete(ctx context.Context) (*runtime.Exit, error) {
 		ID: p.id,
 	})
 	if err != nil {
-		return nil, errdefs.FromGRPC(err)
+		return nil, errgrpc.ToNative(err)
 	}
 	return &runtime.Exit{
 		Status:    r.ExitStatus,

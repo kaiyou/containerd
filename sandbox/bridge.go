@@ -25,6 +25,7 @@ import (
 
 	api "github.com/containerd/containerd/api/runtime/sandbox/v1"
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 )
 
 // NewClient returns a new sandbox client that handles both GRPC and TTRPC clients.
@@ -78,5 +79,5 @@ func (g *grpcBridge) ShutdownSandbox(ctx context.Context, request *api.ShutdownS
 }
 
 func (g *grpcBridge) SandboxMetrics(ctx context.Context, request *api.SandboxMetricsRequest) (*api.SandboxMetricsResponse, error) {
-	return nil, errdefs.ToGRPC(errdefs.ErrNotImplemented)
+	return nil, errgrpc.ToGRPC(errdefs.ErrNotImplemented)
 }

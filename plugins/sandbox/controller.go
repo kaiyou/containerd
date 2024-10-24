@@ -29,6 +29,7 @@ import (
 	v2 "github.com/containerd/containerd/runtime/v2"
 	"github.com/containerd/containerd/sandbox"
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/log"
 
 	imagespec "github.com/opencontainers/image-spec/specs-go/v1"
@@ -148,7 +149,7 @@ func (c *controllerLocal) Create(ctx context.Context, sandboxID string, opts ...
 		NetnsPath:  coptions.NetNSPath,
 	}); err != nil {
 		c.cleanupShim(ctx, sandboxID, svc)
-		return fmt.Errorf("failed to create sandbox %s: %w", sandboxID, errdefs.FromGRPC(err))
+		return fmt.Errorf("failed to create sandbox %s: %w", sandboxID, errgrpc.ToNative(err))
 	}
 
 	return nil
@@ -168,7 +169,7 @@ func (c *controllerLocal) Start(ctx context.Context, sandboxID string) (sandbox.
 	resp, err := svc.StartSandbox(ctx, &runtimeAPI.StartSandboxRequest{SandboxID: sandboxID})
 	if err != nil {
 		c.cleanupShim(ctx, sandboxID, svc)
-		return sandbox.ControllerInstance{}, fmt.Errorf("failed to start sandbox %s: %w", sandboxID, errdefs.FromGRPC(err))
+		return sandbox.ControllerInstance{}, fmt.Errorf("failed to start sandbox %s: %w", sandboxID, errgrpc.ToNative(err))
 	}
 
 	return sandbox.ControllerInstance{
@@ -186,7 +187,7 @@ func (c *controllerLocal) Platform(ctx context.Context, sandboxID string) (image
 
 	response, err := svc.Platform(ctx, &runtimeAPI.PlatformRequest{SandboxID: sandboxID})
 	if err != nil {
-		return imagespec.Platform{}, fmt.Errorf("failed to get sandbox platform: %w", errdefs.FromGRPC(err))
+		return imagespec.Platform{}, fmt.Errorf("failed to get sandbox platform: %w", errgrpc.ToNative(err))
 	}
 
 	var platform imagespec.Platform
@@ -214,7 +215,7 @@ func (c *controllerLocal) Stop(ctx context.Context, sandboxID string, opts ...sa
 	}
 
 	if _, err := svc.StopSandbox(ctx, req); err != nil {
-		return fmt.Errorf("failed to stop sandbox: %w", errdefs.FromGRPC(err))
+		return fmt.Errorf("failed to stop sandbox: %w", errgrpc.ToNative(err))
 	}
 
 	return nil
@@ -228,7 +229,7 @@ func (c *controllerLocal) Shutdown(ctx context.Context, sandboxID string) error 
 
 	_, err = svc.ShutdownSandbox(ctx, &runtimeAPI.ShutdownSandboxRequest{SandboxID: sandboxID})
 	if err != nil {
-		return fmt.Errorf("failed to shutdown sandbox: %w", errdefs.FromGRPC(err))
+		return fmt.Errorf("failed to shutdown sandbox: %w", errgrpc.ToNative(err))
 	}
 
 	if err := c.shims.Delete(ctx, sandboxID); err != nil {
@@ -249,7 +250,7 @@ func (c *controllerLocal) Wait(ctx context.Context, sandboxID string) (sandbox.E
 	})
 
 	if err != nil {
-		return sandbox.ExitStatus{}, fmt.Errorf("failed to wait sandbox %s: %w", sandboxID, errdefs.FromGRPC(err))
+		return sandbox.ExitStatus{}, fmt.Errorf("failed to wait sandbox %s: %w", sandboxID, errgrpc.ToNative(err))
 	}
 
 	return sandbox.ExitStatus{

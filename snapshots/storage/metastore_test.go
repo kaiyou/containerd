@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/containerd/containerd/snapshots"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 )

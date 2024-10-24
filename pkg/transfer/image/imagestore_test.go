@@ -24,7 +24,7 @@ import (
 	"testing"
 
 	"github.com/containerd/containerd/images"
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 )

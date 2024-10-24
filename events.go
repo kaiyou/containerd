@@ -19,7 +19,7 @@ package containerd
 import (
 	"context"
 
-	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/typeurl/v2"
 
 	eventsapi "github.com/containerd/containerd/api/services/events/v1"
@@ -56,7 +56,7 @@ func (e *eventRemote) Publish(ctx context.Context, topic string, event events.Ev
 		Event: protobuf.FromAny(any),
 	}
 	if _, err := e.client.Publish(ctx, req); err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 	return nil
 }
@@ -71,7 +71,7 @@ func (e *eventRemote) Forward(ctx context.Context, envelope *events.Envelope) er
 		},
 	}
 	if _, err := e.client.Forward(ctx, req); err != nil {
-		return errdefs.FromGRPC(err)
+		return errgrpc.ToNative(err)
 	}
 	return nil
 }

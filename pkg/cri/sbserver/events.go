@@ -34,6 +34,7 @@ import (
 	ctrdutil "github.com/containerd/containerd/pkg/cri/util"
 	"github.com/containerd/containerd/protobuf"
 	"github.com/containerd/errdefs"
+	"github.com/containerd/errdefs/pkg/errgrpc"
 	"github.com/containerd/typeurl/v2"
 	"github.com/sirupsen/logrus"
 	runtime "k8s.io/cri-api/pkg/apis/runtime/v1"
@@ -442,7 +443,7 @@ func handleContainerExit(ctx context.Context, e *eventtypes.TaskExit, cntr conta
 	if errdefs.IsNotFound(err) {
 		_, err = c.client.TaskService().Delete(ctx, &apitasks.DeleteTaskRequest{ContainerID: cntr.Container.ID()})
 		if err != nil {
-			err = errdefs.FromGRPC(err)
+			err = errgrpc.ToNative(err)
 			if !errdefs.IsNotFound(err) {
 				return fmt.Errorf("failed to cleanup container %s in task-service: %w", cntr.Container.ID(), err)
 			}
